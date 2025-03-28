@@ -4,15 +4,23 @@ import java.awt.*;
 class GamePanel extends JPanel {
     private final int screenWidth,screenHeight;
     Block player,block;
+    KeyHandler kH;
+    Timer timer;
 
-    GamePanel(int screenWidth, int screenHeight) {
+    GamePanel(int screenWidth, int screenHeight,KeyHandler kH) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        this.kH = kH;
         setBackground(Color.BLACK);
-        Timer timer = new Timer(100, e -> {
-            player.x += 5;
-            if(player.intersects(block)){System.out.println("Player is colliding!");}
-            else{System.out.println("Player is not colliding!");}
+        timer = new Timer(50, e -> {
+            if(kH.right && !(player.getX()+player.getWidth() == block.getX())
+                        && !(player.getY()+ player.getHeight() == block.getY())
+            ){
+                player.x+= 10;
+            }
+            else if(kH.left && !( player.getX() == block.getX()+block.getWidth()) ){player.x -= 10;}
+            else if(kH.up) {player.y -= 10;}
+            else if(kH.down){player.y += 10;}
             repaint();
         });
         timer.start();
@@ -22,10 +30,8 @@ class GamePanel extends JPanel {
     }
 
     @Override
-    public void update(Graphics g){
+    public void update(Graphics g) {
         super.update(g);
-
-
     }
 
     @Override
